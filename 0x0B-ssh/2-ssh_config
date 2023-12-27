@@ -1,4 +1,7 @@
+#!/usr/bin/env bash
 # ssh_config
+
+# Configure ssh client to use public key authentication and other settings
 
 Host *
     PasswordAuthentication no
@@ -6,5 +9,5 @@ Host *
     SendEnv LANG LC_*
     HashKnownHosts yes
     GSSAPIAuthentication yes
-    Hostname 98.98.98.98
+    GSSAPIDelegateCredentials no
     User ubuntu
