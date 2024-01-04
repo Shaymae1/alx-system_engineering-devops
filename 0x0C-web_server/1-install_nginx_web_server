@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# install nginx and adjust default homepage
-# add redirection
+# installs nginx and configures it on a remote server
+
 apt-get -y update
 apt-get -y install nginx
 ufw allow 'Nginx HTTP'
-echo Holberton School > /var/www/html/index.nginx-debian.html
-sed -i "/^\sserver_name.*/a\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default;
+echo 'Hello World!' > /var/www/html/index.nginx-debian.html
 service nginx start
