@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# script that will display information about subdomains
+# This script will get the subdomains of a domain and print them out
+# Usage: ./0-world_wide_web <domain> <subdomain>
 
+get_subdomains() {
+	domain="$1"
+	subdomain="$2"
+	subdomains=("www" "lb-01" "web-01" "web-02")
+	if [ "$subdomain" ]; then
+		ip=$(dig "$subdomain.$domain" | awk '/^;; ANSWER SECTION:$/ { getline; print $5 }')
+		echo "The subdomain $subdomain is a A record and points to $ip"
+	else
+		for sub in "${subdomains[@]}"; do
+			ip=$(dig "$sub.$domain" | awk '/^;; ANSWER SECTION:$/ { getline; print $5 }')
+			echo "The subdomain $sub is a A record and points to $ip"
+		done
+	fi
+}
 
-domain="$1"
-subdomain="$2"
-
-if [ -z "$subdomain" ]; then
-   subdomains=( "www" "lb-01" "web-01" "web-02" )
-   for sub in "${subdomains[@]}"
-   do
-       record_type=$(dig "$sub.$domain" | awk '/ANSWER SECTION:/{getline; print $4}')
-       record_value=$(dig "$sub.$domain" | awk '/ANSWER SECTION:/{getline; print $5}')
-       printf "The subdomain %s is a %s record and points to %s\n" "$sub" "$record_type" "$record_value"
-   done
-else
-   record_type=$(dig "$subdomain.$domain" | awk '/ANSWER SECTION:/{getline; print $4}')
-   record_value=$(dig "$subdomain.$domain" | awk '/ANSWER SECTION:/{getline; print $5}')
-   printf "The subdomain %s is a %s record and points to %s\n" "$subdomain" "$record_type" "$record_value"
-fi
+get_subdomains "$1" "$2"
