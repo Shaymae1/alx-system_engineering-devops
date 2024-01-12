@@ -13,7 +13,7 @@ global
         crt-base /etc/ssl/private
 
         # See: https://ssl-config.mozilla.org/#server=haproxy&server-version=2.0.3&config=intermediate
-        ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+        ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-S>
         ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
         ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
 
@@ -32,19 +32,20 @@ defaults
         errorfile 502 /etc/haproxy/errors/502.http
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
-frontend http
+
+frontend shaydoes-frontend
         bind *:80
         mode http
-        http-request set-header X-Forwarded-Proto http
-        default_backend web-backend
-
-frontend http
-        bind *:443 ssl crt /etc/haproxy/certs/www.shaydoes.tech.pem
-        http-request set-header X-Forwarded-Proto https
         http-request redirect scheme https code 301 unless { ssl_fc }
-        default_backend web-backend
+        http-request set-header X_Forwarded-Proto http
+        default_backend shaydoes-backend
 
-backend web-backend
+frontend shaydoes-frontend-https
+        bind *:443 ssl crt /etc/haproxy/certs/shaydoes.tech.pem
+        http-request set-header X-Forwarded-Proto https
+        default_backend shaydoes-backend
+
+backend shaydoes-backend
         balance roundrobin
-        server 436391-web-01 54.160.111.174
-        server 436391-web-02 100.25.104.60
+        server 436391-web-01 54.160.111.174:80 check
+        server 436391-web-02 100.25.104.60:80 check
