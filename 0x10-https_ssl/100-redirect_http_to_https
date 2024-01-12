@@ -39,7 +39,23 @@ frontend www
         http-request redirect scheme https unless { ssl_fc }
         default_backend www-backend
 
+# /etc/haproxy/haproxy.cfg
+
+frontend http_front
+    bind *:80
+    mode http
+    option forwardfor
+    reqadd X-Forwarded-Proto:\ http
+
+    acl is_ssl hdr(X-Forwarded-Proto) https
+    redirect scheme https code 301 if !is_ssl
+
+backend http_back
+    mode http
+    server webserver1 127.0.0.1:8080
+    # Add more backend server configurations if needed
+
 backend www-backend
         balance roundrobin
-        server 436391-web-01     54.160.111.174 check
-        server 436391-web-02     100.25.104.60 check
+        server 436391-web-01     54.160.111.174:80 check
+        server 436391-web-02     100.25.104.60:80 check
