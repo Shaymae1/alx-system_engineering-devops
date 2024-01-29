@@ -1,24 +1,16 @@
 #!/usr/bin/python3
-"""
-Uses the JSON placeholder api to query data about an employee
-"""
-
-from requests import get
+"""Generate a Todo list for a given employee id"""
+import requests
 from sys import argv
 
-if __name__ == '__main__':
-    url = 'https://jsonplaceholder.typicode.com'
-    todo_url = url + "/user/{}/todos".format(argv[1])
-    name_url = url + "/users/{}".format(argv[1])
-    todo_result = get(todo_url).json()
-    name_result = get(name_url).json()
+if __name__ == "__main__":
+    url = "https://jsonplaceholder.typicode.com/"
+    id = argv[1]
 
-    todo_num = len(todo_result)
-    todo_complete = len([todo for todo in todo_result
-                         if todo.get("completed")])
-    name = name_result.get("name")
-    print("Employee {} is done with tasks({}/{}):"
-          .format(name, todo_complete, todo_num))
-    for todo in todo_result:
-        if (todo.get("completed")):
-            print("\t {}".format(todo.get("title")))
+    user = requests.get(url + f"users/{id}").json()
+    todos = requests.get(url + f"todos", params={"userId": id}).json()
+
+    tasks = [i["title"] for i in todos if i["completed"]]
+    print(f"Employee {user.get('name')} is done with ", end="")
+    print(f"tasks({len(tasks)}/{len(todos)}):")
+    [print(f"\t {i}") for i in tasks]
