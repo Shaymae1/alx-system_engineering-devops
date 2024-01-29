@@ -3,11 +3,11 @@
 Uses the JSON placeholder api to query data about an employee
 """
 
-from requests import get
-from sys import argv
+import requests
+import sys
 
-if __name__ == '__main__':
-    url = 'https://jsonplaceholder.typicode.com'
+if __name__ == "__main__":
+    url = "https://jsonplaceholder.typicode.com/"
     
     employee_id = sys.argv[1]
 
@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     user = user_response.json()
 
-    params = {"userid": employee_id}
+    params = {"userId": employee_id}
 
     todos_response = requests.get(url + "todos", params=params)
 
