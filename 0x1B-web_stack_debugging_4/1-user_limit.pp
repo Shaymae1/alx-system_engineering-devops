@@ -1,13 +1,12 @@
-# Increases the amount of traffic an Nginx server can handle.
+# loggin with holberton user
 
-# Increase the ULIMIT of the default file
-exec { 'fix--for-nginx':
-  command => 'sed -i "s/15/4096/" /etc/default/nginx',
-  path    => '/usr/local/bin/:/bin/'
-} ->
 
-# Restart Nginx
-exec { 'nginx-restart':
-  command => 'nginx restart',
-  path    => '/etc/init.d/'
+exec { 'Modify hard limit':
+    command  => 'sed -i "s/holberton hard nofile 5/holberton hard nofile unlimited/g" /etc/security/limits.conf',
+    provider => 'shell'
+}
+
+exec { 'Modify soft limit':
+    command  => 'sed -i "s/holberton soft nofile 4/holberton soft nofile 3000/g" /etc/security/limits.conf',
+    provider => 'shell'
 }
