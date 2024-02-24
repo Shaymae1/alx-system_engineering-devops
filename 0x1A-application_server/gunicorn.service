@@ -22,3 +22,7 @@ SyslogIdentifier=gunicorn
 [Install]
 # Enable the service for multi-user.target
 WantedBy=multi-user.target
+
+# Environment
+Environment="HBNB_MYSQL_USER=hbnb_dev"
+
