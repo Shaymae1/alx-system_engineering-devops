@@ -47,5 +47,5 @@ frontend shaydoes-frontend-https
 
 backend shaydoes-backend
         balance roundrobin
-        server 436391-web-01 54.160.111.174:80 check
-        server 436391-web-02 100.25.104.60:80 check
+        server 436391-web-01 18.206.208.251:80 check
+        server 436391-web-02 3.85.148.39:80 check
